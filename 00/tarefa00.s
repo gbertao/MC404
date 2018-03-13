@@ -3,12 +3,14 @@
 @ Somar os valores das 3, somar o resultado a uma constante e
 @ armazenar o total em r0.
 
-		.org 100		@ Definindo inicio do bloco de variaveis
+		.org 0x100		@ Definindo inicio do bloco de variaveis
+
 varA:	.skip 4			@ VarA inicia em 0x100
 varB:	.skip 4			@ VarB inicia em 0x104
 varC:	.skip 4			@ VarC inicia em 0x108
 
-		.org 200		@ Definindo inicio do bloco de instruções
+		.org 0x200		@ Definindo inicio do bloco de instruções
+
 start:
 		ld r0,varA		@ Somando o valor das 3 variaveis junto
 		ld r1,varB		@ da constante e armazenando os valores
