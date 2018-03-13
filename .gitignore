@@ -1,4 +1,9 @@
+# Ignora todos os arquivos
 *
+
+# Whilelist os subdiretorios
 !*/
+
+# Whithelist os .s e o gitignore
 !*.s
 !.gitignore
