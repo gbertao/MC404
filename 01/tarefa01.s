@@ -1,58 +1,56 @@
 @ MC 404 - Lab 01 - Giovanni Bertão - ra173325
+@ Dado uma sequencia de números o programa guarda em 'resultado'
+@ a quantidade dos números que pertencem a [-100,100]
 
-@ Definindo uma constante
-COMPR	.equ	8
-MAXVAL	.equ	100
-MINVAL	.equ	-100
+@ Definindo constantes
+COMPR       .equ 8
+MAXVAL      .equ 100
+MINVAL      .equ -100
 
 @ Reservando espaço para variaveis
-		.org 0x400
+            .org 0x400
 
-sequencia:	.word	-200,-101,3,10,0x0,70,-10,-888	@ Vetor de 8 posições
-i:			.skip	4								@ Variaveis internas
-compr:		.skip	4
-resultado:	.skip	4
-p:			.skip	4								@ Apontador
-
-@ Inicializar variveis
-
-set	r0,0x0
-st	resultado,r0
-set	r0,COMPR
-st	compr,r0
-set	r0,sequencia
-st	p,r0
+sequencia:  .skip 4*MAXVAL    @ Espaço suficiente
+i:          .skip 4	         @ Variaveis internas
+compr:      .skip 4
+resultado:  .skip 4
+p:          .skip 4           @ Apontador
 
 @ Iniciar
-		.org 0x100
+            .org 0x100
 inicio:
+@ Inicializar variveis
+            set r0,0x0
+            st resultado,r0
+            set r0,sequencia
+            st p,r0           @ p <- &(sequencia)
+
 inicio_for:
-	set r0,0
-	st	i,r0
+            set r0,0          @ r0 = iterador
+            st i,r0
 teste_for:
-	ld r1,i
-	ld r2,compr
-	cmp r1,r2
-	jge final_for
+            ld r1,i           @ r1 e r2 aux para comparaçoes
+            ld r2,compr       
+            cmp r1,r2
+            jge final_for
 corpo_for:
-	ld	r10,p
-	ld	r1,[r10]
-	set	r2,-100
-	cmp	r1,r2
-	jl	incremento
-	ld 	r2,100
-	jg	incremento
-	ld 	r1,resultado
-	add	r1,1
-	st	resultado,r1
+            ld r10,p          @ r10<-&(seq[i])
+            ld r1,[r10]
+            set r2,MINVAL  
+            cmp r1,r2         @ sequencia[i] < MIN ?
+            jl incremento
+            set r2,MAXVAL
+            cmp r1,r2         @ sequencia[i] > MAX ?
+            jg incremento
+            ld r1,resultado   @ update resultado
+            add r1,1
+            st resultado,r1
 incremento:
-	set r1,p
-	add r1,4
-	st	p,r1
-	add r0,1
-	st	i,r0
-	jmp teste_for
+            ld r1,p           @ verificar sequencia[i+1]
+            add r1,4
+            st p,r1
+            add r0,1          @ r0 + 1 = i + 1
+            st i,r0
+            jmp teste_for
 final_for:
-	@printf
-@ Parando
-hlt
+            hlt	            @ Parando
