@@ -1,4 +1,7 @@
-@ UNICAMP 2018 - MC404 - Lab 02 - Giovanni Bertão - ra173325
+@ UNICAMP 2018 - MC404 - Lab 03 - Giovanni Bertão - ra173325
+@ O programa utiliza um teclado para receber um par de valores (n,c) onde n esta no intervalo [0,9] e c={*,#}
+@ Incialmente n é 0. Enquanto o c for diferente de * o programa soma n ao n anterior e codifica a saida em um
+@ display de 7 segmentos.
 
 @ Constantes uteis
    FIM_MEMORIA    .equ 0x1000 @ Inicio da pilha
@@ -27,6 +30,7 @@ read2:
 
 @ Função display: Escreve no display de 7 segmentos o valor da tab_digitos[r0]
 display:
+   ld r0,[sp+4]         @ r0<-arg1
    set r3,tab_digitos   @ r3<-&(tab_digitos[0])
    add r3,r0            @ r3<-&(tab_digitos[r0])
    ldb r0,[r3]          @ r0<-tab_digitos[r0]
@@ -46,7 +50,9 @@ loop:
    call read            @ Realiza leituras
    add r4,r0            @ Atualiza r4(Soma)
    mov r0,r4
+   push r0              @ arg1<-r0
    call display         @ Manda a saída no display
+   add sp, 4            @ Desaloca o arg1
    cmp r1,CERCA         @ Repete enquanto segunda parte da entrada != *
    jz loop
 fim:
