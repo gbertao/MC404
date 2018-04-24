@@ -6,4 +6,6 @@
 
 # Whithelist os .s e o gitignore
 !*.s
+!*/devices.txt
+!*/Makefile
 !.gitignore
