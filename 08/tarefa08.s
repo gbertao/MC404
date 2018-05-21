@@ -24,7 +24,7 @@
          .set KEYB_READY, 1
 
 @ Vetor de interupções
-         .org IRQ*4
+         .org 6*4
          b tratador_botao
          b tratador_timer
 
@@ -139,7 +139,17 @@ travado:
          mov r1,#2
          str r1,[r0]
 
-@ Apaga o Display
+@ Apagar o Display
+         
+         ldr r0,=TIMER
+         mov r1,#1000
+         str r1,[r0]
+         ldr r0,=flag_timer
+cooldown_apagar:
+         ldr r1,[r0]
+         cmp r1,#1
+         bne cooldown_apagar
+         
          mov r1,#0
          ldr r0,=DM
          str r1,[r0]
@@ -205,6 +215,11 @@ espera2:
 @ Tratadores de interupção
          .align 4
 tratador_timer:
+         ldr r7,=flag_timer
+         mov r8,#1
+         str r8,[r7]
+         movs pc,lr
+
 tratador_botao:
          ldr r7,=flag_botao
          mov r8,#1
