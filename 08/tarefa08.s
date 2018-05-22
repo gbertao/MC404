@@ -1,14 +1,19 @@
 @ UNICAMP 2018 - MC404 - Lab 08 - Giovanni Bertão - ra173325
          .global _start
+@ flag para habilitar interrupções externas no registrador de status
+	.set IRQ, 0x80
+	.set FIQ, 0x40
 
-@ Habilitar interupções externas
-         .set EIRQ, 0x80
-         .set EFIQ, 0x40
-
-@ Código das interupções
-         .set IRQ,0x6
-         .set FIQ,0x7
-
+@ endereços das pilhar
+	.set STACK,     0x80000
+	.set STACK_FIQ, 0x72000
+	.set STACK_IRQ, 0x70000
+	
+@ modos de interrupção no registrador de status
+	.set IRQ_MODE,0x12
+	.set FIQ_MODE,0x11
+	.set USER_MODE,0x10
+	
 @ Endereço dos dispositivos
          .set LEDS, 0x90000
          .set DM, 0xa0000
@@ -20,24 +25,28 @@
          .set TIMER, 0xc0000
          .set BOTAO, 0xd0000
 
-@ Constante de estado
-         .set KEYB_READY, 1
+@ vetor de interrupções
+	.org  6*4               @ preenche apenas duas posição do vetor, 6 e 7
+vetor:
+	b      tratador_botao
+	b      tratador_timer
+	
+	.org 0x200
+_start:
+	mov	sp,#0x500	@ seta pilha do modo supervisor
+	mov	r0,#IRQ_MODE	@ coloca processador no modo IRQ (interrupção externa)
+	msr	cpsr,r0		@ processador agora no modo IRQ
+	mov	sp,#STACK_IRQ	@ seta pilha de interrupção IRQ
+	mov	r0,#FIQ_MODE	@ coloca processador no modo IRQ (interrupção externa)
+	msr	cpsr,r0		@ processador agora no modo FIQ
+	mov	sp,#STACK_FIQ	@ seta pilha de interrupção FIQ
+	mov	r0,#USER_MODE	@ coloca processador no modo usuário
+	bic     r0,r0,#(FIQ+IRQ)@ interrupções FIQ e IRQ habilitadas
+	msr	cpsr,r0		@ processador agora no modo usuário
+	mov	sp,#STACK	@ pilha do usuário no final da memória 
+	
+	b aberto
 
-@ Vetor de interupções
-         .org 6*4
-         b tratador_botao
-         b tratador_timer
-
-         .org 0x1000
-_start:  
-         mrs r0, cpsr
-         bic r0,r0,#(EIRQ+EFIQ)
-         msr cpsr,r0
-         b aberto
-         /* syscall exit(int status) */
-         mov     r0, #0     @ status -> 0
-         mov     r7, #1     @ exit is syscall #1
-         swi     #0x55      @ invoke syscall 
 aberto:
 @ Apaga os LEDS
          ldr r0,=LEDS
@@ -142,12 +151,14 @@ travado:
 @ Apagar o Display
          
          ldr r0,=TIMER
-         mov r1,#1000
+         ldr r1,=inter1
+			ldr r1,[r1]
          str r1,[r0]
          ldr r0,=flag_timer
+			mov r2,#1
 cooldown_apagar:
          ldr r1,[r0]
-         cmp r1,#1
+         cmp r1,r2
          bne cooldown_apagar
          
          mov r1,#0
@@ -213,7 +224,6 @@ espera2:
          b fechado
 
 @ Tratadores de interupção
-         .align 4
 tratador_timer:
          ldr r7,=flag_timer
          mov r8,#1
@@ -227,6 +237,8 @@ tratador_botao:
          movs pc,lr
 
 @ Flags usadas para controle
+inter1:
+			.word 5000
 senha:
          .word 0
 flag_botao:
