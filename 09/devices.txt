@@ -1,14 +1,14 @@
 %buttons Parada
-Solicitar 0x90000 6 P
+Solicitar 0x90000 7 P
 
 %buttons Ponto X
-Chegada 0x90001 7 P
-Partida 0x90002 7 P
+Chegada 0x90001 6 P
+Partida 0x90002 6 P
 
 %buttons Ponto Y
-Chegada 0x90003 7 P
-Partida 0x90004 7 P
+Chegada 0x90003 6 P
+Partida 0x90004 6 P
 
 %buttons Ponto Z
-Chegada 0x90005 7 P
-Partida 0x90006 7 P
+Chegada 0x90005 6 P
+Partida 0x90006 6 P
