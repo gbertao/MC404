@@ -52,8 +52,34 @@ _start:
    bic   r0,r0,#(FIQ+IRQ)  @ r0 <- 0x10 and not(FIQ+IRQ)
    msr	cpsr,r0		      @ cpsr: I=0; F=0; MODE=0x10
    mov	sp,#STACK	      @ seta pilha do usuário
-   
+
    @ exit(0)
    mov r0,#0
    mov r7,#1
    svc #0x55
+
+tratador_botao:
+   ldb r0,=flag_botao
+   mov r1,#1
+   str r0,[r1]
+   bx lr
+
+tratador_parada:
+   ldb r8,=flag_botao
+   mov r9,#1
+   str r9,[r8]
+   bx lr
+
+.data
+paradaX: .ascii "Centro\n"
+         .byte 0
+paradaY: .ascii "B. Geraldo\n"
+         .byte 0
+paradaZ: .ascii "UNICAMP\n"
+         .byte 0
+prox:    .ascii "Proxima Parada:"
+         .byte 0
+atual:   .ascii "Esta e a Parada:"
+         .byte 0
+solici:  .ascii "Parada Solicitada"
+         .byte 0
