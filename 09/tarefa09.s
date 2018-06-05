@@ -58,12 +58,29 @@ _start:
    mov r7,#1
    svc #0x55
 
+@ Função para escrever no console, mensagem passada em r1
+escreve:
+   mov r2,#-1
+escreve1:
+   add r2,#1               @ Contando o numero de char
+   ldrb r3,[r1,r2]
+   cmp r3, #0
+   bne escreve1            @ r2 tem o numero de char
+
+   mov r0,#1               @ write(r0, r1, r2) 
+   mov r7,#4               @        |   |   |->len
+   svc                     @        |   |->string *
+                           @        |->stdout
+   bx lr                   
+
+@ Tratador IRQ
 tratador_botao:
    ldb r0,=flag_botao
    mov r1,#1
    str r0,[r1]
    bx lr
 
+@ Tratador FIQ
 tratador_parada:
    ldb r8,=flag_botao
    mov r9,#1
