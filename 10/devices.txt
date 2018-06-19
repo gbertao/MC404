@@ -1,0 +1,20 @@
+%buttons Parada
+Solicitar 0x90000 7 P
+
+%buttons PontoX
+Chegada 0x90001 6 P
+Partida 0x90002 6 P
+
+%buttons PontoY
+Chegada 0x90003 6 P
+Partida 0x90004 6 P
+
+%buttons PontoZ
+Chegada 0x90005 6 P
+Partida 0x90006 6 P
+
+%lcd QuadroAvisos
+# cmd_port data_port color size
+# size can be 16x2, 20x2 or 20x4
+# color can be blue, green or amber
+0x90007 0x90008 blue 20x2  
