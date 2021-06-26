@@ -1,0 +1,3 @@
+set r5,0x7000
+set r6,0x3000
+add r5,r6
