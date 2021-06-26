@@ -1,8 +1,0 @@
-%buttons Controle
-Aciona 0x40 0x0 P
-
-%leds Rua1
-ryg 0x90
-
-%leds Rua2
-ryg 0x91

@@ -1,8 +1,0 @@
-%timer
-0x50 0x10
-
-%leds Rua1
-ryg 0x90
-
-%leds Rua2
-ryg 0x91
